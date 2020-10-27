@@ -42,7 +42,7 @@ Users will select environment templates to build environments from.
 
 An environment build will have the following steps:
 - Pull repo manually into a shared empty dir from init container
-- Edit dockerfile to add our own layers for copying assets into the env at /tmp/coder
+- Edit dockerfile to add our own layers for copying assets from our own envbuilder image into the new image at /tmp/coder
 - Edit dockerfile to add personalize steps as final layers
 - Build new personalized environment image
 - Push custom image to repo with build ID tag
