@@ -38,7 +38,9 @@ spec:
 
 ## Build Environments
 
-Users will select environment templates to build environments from.
+Users will select environment templates to build environments from a UI on environment creation.
+
+Edits to the env will just be pointing the env at a different template/branch.
 
 An environment build will have the following steps:
 - Pull repo manually into a shared empty dir from init container
