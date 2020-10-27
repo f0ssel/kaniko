@@ -110,7 +110,19 @@ If users upload an encryption key to the platform, we can provide a utility to a
 
 `coder secret create --from-file=my-file --from-literal=key,value`
 
-This will create a file in the `.coder/secrets/` directory with the data for each kv pair / file encrypted. This lets users check in secrets into source control and reference them directly in the templates like so:
+This will create a file in the `.coder/secrets/` directory with the data for each kv pair / file encrypted. 
+
+Example:
+```
+name: db
+type: secret
+data:
+  password: G1syMDB+RWRpdCBkb2NrZXJmaWxlIHRvIGFkZCBvdXIgb3duIGxheWVycyBmb3IgY29weWluZyBh
+    c3NldHMgZnJvbSBvdXIgb3duIGVudmJ1aWxkZXIgaW1hZ2UgaW50byB0aGUgbmV3IGltYWdlIGF0
+    IC90bXAvY29kZXJ+Cg==
+```
+
+This lets users check in secrets into source control and reference them directly in the templates like so:
 
 ```
 name: f0ssel-enterprise
