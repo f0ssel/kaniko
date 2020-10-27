@@ -2,6 +2,8 @@
 
 Represent images and environments by templates in one or many github repositories.
 
+In this design the FE UI will just allow selecting of repos/templates/branchs/commits, and all configuration will live in the template files. This will thin down the complexity of the FE dramatically and push customers into versioning and source controlling the config for the platform. 
+
 ```
 .coder/
   images/
@@ -11,6 +13,9 @@ Represent images and environments by templates in one or many github repositorie
   environments/
     team-a.yaml
     f0ssel-dev.yaml
+  secrets/
+    db.yaml
+    f0ssel-ssh.yaml
 ```
 
 ## Build Images
@@ -98,3 +103,38 @@ Iteration steps:
 - We tar up the relative context and pass it into stdin of the pod we create
 - We build and push the image with a preview tag
 - We setup a preview environment for them to verify before they commit the changes
+
+## Secrets (future)
+
+If users upload an encryption key to the platform, we can provide a utility to allow them to check in secrets into the git repo securely. 
+
+`coder secret create --from-file=my-file --from-literal=key,value`
+
+This will create a file in the `.coder/secrets/` directory with the data for each kv pair / file encrypted. This lets users check in secrets into source control and reference them directly in the templates like so:
+
+```
+name: f0ssel-enterprise
+type: environment
+provider: kubernetes
+spec:
+  - name: env
+    primary: true
+    // this references the image name above 
+    github: f0ssel/kaniko
+    image: f0ssel-dev
+    tag: master
+    credentials: dockerhub-creds
+    cpu: 2
+    memory: 4GB
+    // These layers are added last in environment image build
+    personalize:
+      - "RUN echo test3 > test3.txt"
+    env:
+      - name: PGPASSWORD
+        value: 
+          fromSecret: 
+            name: db.yaml
+            key: password
+```
+
+We no longer have to deal with storing the secrets securely on our end by just providing the user with a convient KMS service tied into the platform. Dev secrets are generally handled different from production secrets so this model that favors convience over raw security is probably ideal for most customers. 
