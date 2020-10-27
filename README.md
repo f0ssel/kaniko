@@ -41,11 +41,11 @@ spec:
 Users will select environment templates to build environments from.
 
 An environment build will have the following steps:
-- Run kaniko build based off the image referenced
-- - FROM the base image
-- - Add our own layers for copying assets into the env at /tmp/coder
-- - Run user personalize steps as final layers
-- - Push custom image to repo with build ID tag
+- Pull repo manually into a shared empty dir from init container
+- Edit dockerfile to add our own layers for copying assets into the env at /tmp/coder
+- Edit dockerfile to add personalize steps as final layers
+- Build new personalized environment image
+- Push custom image to repo with build ID tag
 - Submit a deployment using the custom image and tag
 
 Environment templates can have a large api with few required fields to let devs really make the templates their own.
@@ -57,6 +57,9 @@ We'd show little opinion on organizing around sharing of images/templates and le
 - Root access via docker build during environment setup
 - Lets users express complicated setups like multi-container and volumes
 - Removes tons of UI in the product
+
+### Risk
+- This may be slow if we don't utilize caches well
 
 ### Example
 ```
