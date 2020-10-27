@@ -145,7 +145,7 @@ spec:
       - name: PGPASSWORD
         value: 
           fromSecret: 
-            name: db.yaml
+            name: db
             key: password
 ```
 
