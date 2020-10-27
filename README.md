@@ -85,9 +85,11 @@ spec:
 
 ## Image Iteration (future)
 
-Since kaniko can take a tar in addition to a git repo, users could iterate on image development inside a coder environment without git in the mix. 
+Since kaniko can take a tar via stdin users could iterate on image development inside a coder environment without git in the mix. 
 
 Iteration steps:
 - User makes changes in relevant repo
 - User submits build with cli (`coder build image my-image-name`)
+- We tar up the relative context and pass it into stdin of the pod we create
+- We build and push the image with a preview tag
 - We setup a preview environment for them to verify before they commit the changes
