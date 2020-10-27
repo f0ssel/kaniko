@@ -6,14 +6,19 @@ spec:
   containers:
     - name: kaniko
       image: gcr.io/kaniko-project/executor:latest
-      args: ["--dockerfile=/workspace/dockerfile",
-             "--context=dir://workspace",
-             "--destination=<user-name>/<repo>"] # replace with your dockerhub account
+      args:
+        - "--dockerfile=Dockerfile"
+        - "--context=dir://workspace"
+        - "--destination=f0ssel/kaniko"
+        - "--context=git://github.com/f0ssel/kaniko.git#refs/heads/master"
+        - "--cache"
+        - "--cache-repo=f0ssel/kaniko-cache"
       volumeMounts:
         - name: kaniko-secret
           mountPath: /kaniko/.docker
-        - name: dockerfile-storage
-          mountPath: /workspace
+      env:
+        - name: GIT_TOKEN
+          value: "ADD HERE"
   restartPolicy: Never
   volumes:
     - name: kaniko-secret
@@ -22,6 +27,3 @@ spec:
         items:
           - key: .dockerconfigjson
             path: config.json
-    - name: dockerfile-storage
-      persistentVolumeClaim:
-        claimName: dockerfile-claim
