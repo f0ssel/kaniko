@@ -82,3 +82,12 @@ spec:
       - name: PGDATABASE
         value: coder
 ```
+
+## Image Iteration (future)
+
+Since kaniko can take a tar in addition to a git repo, users could iterate on image development inside a coder environment without git in the mix. 
+
+Iteration steps:
+- User makes changes in relevant repo
+- User submits build with cli (`coder build image my-image-name`)
+- We setup a preview environment for them to verify before they commit the changes
