@@ -1,0 +1,4 @@
+# name of image to publish
+image: f0ssel/kaniko
+# Dockerfile location relative to root of git repo
+dockerfile: example-app/Dockerfile
