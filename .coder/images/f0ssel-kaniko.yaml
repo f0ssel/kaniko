@@ -1,0 +1,6 @@
+# type of manifest for coder parsing
+type: image
+# where to push the built image
+name: f0ssel/kaniko
+# Dockerfile location relative to root of git repo
+dockerfile: example-app/Dockerfile

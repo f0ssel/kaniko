@@ -1,34 +1,41 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: kaniko
+  name: environment-$TIMESTAMP
 spec:
   initContainers:
     - name: setup
-      image: ubunutu:latest
+      image: bitnami/git:latest
       command:
         - 'bash'
         - '-c'
         - |
-          apt-get update
-          apt-get install git
+          git clone --depth 1 https://github.com/$GITHUB_REPO.git /workspace
 
-          git clone -depth 1 https://$GIT_TOKEN@github.com/$REPO.git
-  containers:
+          mkdir -p /workspace/.coder/tmp
+          echo -e "$DOCKERFILE_DATA" > /workspace/.coder/tmp/dockerfile
+      volumeMounts:
+        - name: repo
+          mountPath: /workspace
     - name: kaniko
       image: gcr.io/kaniko-project/executor:latest
       args:
-        - "--dockerfile=$DOCKERFILE"
+        - "--dockerfile=.coder/tmp/dockerfile"
         - "--context=dir://workspace"
-        - "--destination=f0ssel/kaniko"
-        - "--context=git://github.com/f0ssel/kaniko.git#refs/heads/master"
+        - "--destination=$IMAGE:env-$TIMESTAMP"
         - "--cache"
-        - "--cache-repo=f0ssel/kaniko-cache"
+        - "--cache-repo=$IMAGE-cache"
       volumeMounts:
         - name: repo
           mountPath: /workspace
         - name: kaniko-secret
           mountPath: /kaniko/.docker
+  containers:
+    - name: environment
+      image: $IMAGE:env-$TIMESTAMP
+      imagePullPolicy: Always
+      command: ["tail"]
+      args: [ "-f", "/dev/null" ]
   restartPolicy: Never
   volumes:
     - name: repo

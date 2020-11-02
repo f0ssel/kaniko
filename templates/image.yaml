@@ -8,7 +8,7 @@ spec:
       image: gcr.io/kaniko-project/executor:latest
       args:
         - "--dockerfile=$DOCKERFILE"
-        - "--destination=$IMAGE:$TIMESTAMP"
+        - "--destination=$IMAGE:$GIT_BRANCH"
         - "--context=git://github.com/$GITHUB_REPO.git#refs/heads/$GIT_BRANCH"
         - "--cache"
         - "--cache-repo=$IMAGE-cache"

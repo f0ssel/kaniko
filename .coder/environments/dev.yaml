@@ -1,0 +1,14 @@
+type: environment
+name: dev
+provider: kubernetes
+spec:
+  - name: my-env
+    primary: true
+    image: f0ssel/kaniko
+    tag: master
+    cpu: 2000m
+    memory: 4GB
+    # These layers are added last in environment image build
+    personalize:
+      - "          RUN echo test3 > test3.txt"
+      - "          RUN echo test4 > test4.txt"
